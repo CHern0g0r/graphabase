@@ -1,0 +1,9 @@
+language: python
+python:
+  - "3.6"
+
+install:
+  - pip install rdflib
+
+script:
+  - python -m pytest -v
