@@ -10,10 +10,10 @@ epsilon = finite_automaton.Epsilon()
 
 
 def test_regex_to_epsilon_nfa():
-    regex = Regex("(a-|a a b)*")
+    regex = Regex("(a|a a b)*")
     enfa = regex.to_epsilon_nfa()
     assert (len(enfa.states) == 12)
-    assert (not enfa.accepts([symb_a]))
+    assert (enfa.accepts([symb_a]))
     assert (enfa.accepts([symb_a, symb_a, symb_b, epsilon]))
     assert (not enfa.accepts([symb_c]))
     assert (enfa.accepts([epsilon]))
@@ -92,3 +92,32 @@ def test_nfa_intersection():
     assert (not new_nfa.accepts([symb_c, symb_b]))
     assert (not new_nfa.accepts([symb_a, symb_a]))
     assert (not new_nfa.accepts([symb_b]))
+
+
+def test_dfa_nfa_intersection():
+    nfa1 = NondeterministicFiniteAutomaton()
+    state0 = finite_automaton.State(0)
+    state1 = finite_automaton.State(1)
+    state2 = finite_automaton.State(2)
+    state3 = finite_automaton.State(3)
+    nfa1.add_transition(state0, symb_a, state1)
+    nfa1.add_transition(state0, symb_c, state2)
+    nfa1.add_transition(state1, symb_a, state1)
+    nfa1.add_transition(state1, symb_b, state2)
+    nfa1.add_transition(state2, symb_a, state0)
+    nfa1.add_transition(state0, symb_c, state3)
+    nfa1.add_transition(state3, symb_a, state1)
+    nfa1.add_start_state(state0)
+    nfa1.add_final_state(state1)
+
+    s = ("((((b.a)|(((a|(b.c))|(c.a)).(((b.c))*." +
+         "(b.a)))))*.(((a|(b.c))|(c.a)).((b.c))*))")
+    r = Regex(s)
+    dfa = r.to_epsilon_nfa().to_deterministic().minimize()
+    dnfa = dfa.get_intersection(nfa1)
+    assert (dnfa.accepts([symb_a]))
+    assert (dnfa.accepts([symb_c, symb_a]))
+    assert (dnfa.accepts([symb_a, symb_b, symb_a, symb_a]))
+    assert (not dnfa.accepts([symb_c, symb_b]))
+    assert (not dnfa.accepts([symb_a, symb_a]))
+    assert (not dnfa.accepts([symb_b]))
