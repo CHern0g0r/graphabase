@@ -5,7 +5,6 @@ python:
 install:
   - pip3 install rdflib
   - pip3 install pyformlang
-  - apt install graphviz
   - pip3 install pygraphviz
 
 script:
