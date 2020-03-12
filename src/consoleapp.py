@@ -27,8 +27,6 @@ class Control:
         graph = rdf_utils.read_graph(args[0])
         self.is_loaded = True
         self.aut = dfa.graph_to_dfa(graph)
-        ut = dfa.min_dfa_from_regex(dfa.string_to_regex("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
-        dfa.dfa_to_dot(ut, "/home/chernogor/Workspace/Python/graphabase/resources/shit.dot")
 
     def to_list(self, *args):
         for i in self.aut._input_symbols:
@@ -42,12 +40,6 @@ class Control:
         if len(args) < 1:
             print("Enter request")
             return
-
-        # req = dfa.minimize_dfa(
-        #         dfa.graph_to_dfa(rdf_utils.read_graph(
-        #             "/home/chernogor/Workspace/Python/" +
-        #             "graphabase/resources/test_copy.rdf"
-        #         )))
 
         regex = ' '.join(list(args[0]))
         req = dfa.min_dfa_from_regex(
