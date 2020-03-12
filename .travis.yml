@@ -7,7 +7,9 @@ install:
   - pip3 install pyformlang
   - pip3 install pygraphviz
 
-before_script: cd src
+before_script:
+  - sudo apt-get install graphviz
+  - cd src
 
 script:
   - python3 -m pytest ../test -v
