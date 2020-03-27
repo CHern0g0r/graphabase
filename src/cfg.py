@@ -105,22 +105,3 @@ class CFG:
         with open(filename, 'w') as f:
             list(map(lambda rule: self.print_rule(rule.rule, f), cnf.rules))
 
-
-c = CFG()
-
-# print(c.new_rule(c.new_nonterm("adsf"), "asdf").rule)
-# print(c.new_rule(c.new_nonterm("adsf"), "asdf").__qualname__)
-
-# print(c.new_nonterm("adsf").__qualname__)
-
-c.read_from_file(
-    "/home/chernogor/Workspace/Python/graphabase/resources/query.txt")
-print(len(c.nonterms))
-print(len(c.terms))
-print(len(c.rules))
-c.print_cnf("/home/chernogor/Workspace/Python/graphabase/src/res.txt")
-
-# print(c.symb)
-# print(list(map(lambda x: x.__name__, c.nonterms.values())))
-# print(c.terms)
-# print(list(map(lambda x: x.rule, c.rules)))
