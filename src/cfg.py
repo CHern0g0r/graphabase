@@ -104,4 +104,3 @@ class CFG:
         cnf = self.to_chomsky_nf()
         with open(filename, 'w') as f:
             list(map(lambda rule: self.print_rule(rule.rule, f), cnf.rules))
-

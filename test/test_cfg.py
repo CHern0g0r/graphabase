@@ -82,16 +82,32 @@ def test_parse_grammar():
     assert (len(c.rules) == 8)
 
 
-def test_input_output():
+def test_input():
     c = CFG()
     testdir = tempfile.gettempdir()
+    test_keys = {'b', 'X', 'Z', 'c', 'Y', 'T0', 'a', 'S'}
     with open(path.join(testdir, 'input.txt'), 'w') as f:
         for i in cnf_lines:
             f.write(i + '\n')
     c.read_from_file(path.join(testdir, 'input.txt'))
+    assert (len(c.grammar.rules) == 11)
+    assert (c.symb.keys() == test_keys)
+    assert (len(c.rules) == 12)
+    assert (len(c.terms) == 3)
+    assert (len(c.nonterms) == 5)
+
+
+def test_output():
+    c = CFG()
+    testdir = tempfile.gettempdir()
+    # with open(path.join(testdir, 'input.txt'), 'w') as f:
+    #     for i in cnf_lines:
+    #         f.write(i + '\n')
+    # c.read_from_file(path.join(testdir, 'input.txt'))
+    c.parse_grammar(lines)
     c.print_cnf(path.join(testdir, 'output.txt'))
 
     with open(path.join(testdir, 'output.txt')) as f:
-        lines = map(lambda x: re.sub("\n", "", x), f.readlines())
+        lines1 = map(lambda x: re.sub("\n", "", x), f.readlines())
 
-    assert (set(lines) == set(cnf_lines))
+    assert (set(lines1) == set(cnf_lines))
