@@ -100,10 +100,6 @@ def test_input():
 def test_output():
     c = CFG()
     testdir = tempfile.gettempdir()
-    # with open(path.join(testdir, 'input.txt'), 'w') as f:
-    #     for i in cnf_lines:
-    #         f.write(i + '\n')
-    # c.read_from_file(path.join(testdir, 'input.txt'))
     c.parse_grammar(lines)
     c.print_cnf(path.join(testdir, 'output.txt'))
 
@@ -111,3 +107,12 @@ def test_output():
         lines1 = map(lambda x: re.sub("\n", "", x), f.readlines())
 
     assert (set(lines1) == set(cnf_lines))
+
+
+def test_cyk():
+    c = CFG()
+    c.parse_grammar(lines)
+    assert (c.cyk("a b".split()))
+    assert (not c.cyk("a".split()))
+    assert (c.cyk("a a c b".split()))
+    assert (not c.cyk("c c".split()))

@@ -1,5 +1,7 @@
 from grammpy import Grammar, Nonterminal, Rule, EPS
 from grammpy.transforms import ContextFree
+from grammpy.exceptions import NotParsedException
+from grammpy.parsers import cyk
 
 
 class CFG:
@@ -59,6 +61,14 @@ class CFG:
                 self.symb[expr] = expr
             return self.nonterms[expr]
 
+    def cyk(self, q):
+        g = ContextFree.prepare_for_cyk(self.grammar)
+        try:
+            cyk(g, q)
+        except NotParsedException:
+            return False
+        return True
+
     def new_nonterm(self, s):
         class Nonterm(Nonterminal):
             pass
@@ -104,3 +114,10 @@ class CFG:
         cnf = self.to_chomsky_nf()
         with open(filename, 'w') as f:
             list(map(lambda rule: self.print_rule(rule.rule, f), cnf.rules))
+
+
+if __name__ == "__main__":
+    c = CFG()
+    file_name = str(input())
+    c.read_from_file(file_name)
+    print(c.cyk(input().split()))
