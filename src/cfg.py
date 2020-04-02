@@ -115,6 +115,12 @@ class CFG:
         with open(filename, 'w') as f:
             list(map(lambda rule: self.print_rule(rule.rule, f), cnf.rules))
 
+    def read_query_from_file(self, filename):
+        query = ""
+        with open(filename) as f:
+            query = str(f.readline()).split()
+        return query
+
 
 if __name__ == "__main__":
     c = CFG()
