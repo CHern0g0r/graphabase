@@ -14,6 +14,23 @@ lines = [['S', 'a', 'X', 'b', 'X'],
          ['Y', 'X'],
          ['Z', 'Z', 'X']]
 
+gram1 = [['S', 'S', 'a', 'S'],
+         ['S', 'S', 'b', 'S'],
+         ['S', 'eps']]
+
+gram2 = [['S', 'T'],
+         ['S', 'P'],
+         ['T', 'X', 'Y'],
+         ['X', 'a', 'X', 'b'],
+         ['X', 'a', 'b'],
+         ['Y', 'c', 'Y'],
+         ['Y', 'c'],
+         ['P', 'V', 'W'],
+         ['V', 'a', 'V'],
+         ['V', 'a'],
+         ['W', 'b', 'W', 'c'],
+         ['W', 'b', 'c']]
+
 cnf_lines = ["Z Z X",
              "X eps",
              "T0 X T0",
@@ -109,13 +126,34 @@ def test_output():
     assert (set(lines1) == set(cnf_lines))
 
 
-def test_cyk():
+def test_cyk_1():
     c = CFG()
     c.parse_grammar(lines)
     assert (c.cyk("a b".split()))
     assert (not c.cyk("a".split()))
     assert (c.cyk("a a c b".split()))
     assert (not c.cyk("c c".split()))
+    assert (not c.cyk("".split()))
+
+
+def test_cyk_2():
+    c = CFG()
+    c.parse_grammar(gram1)
+    assert (c.cyk("a b".split()))
+    assert (not c.cyk("a b c".split()))
+    assert (c.cyk("a a a b a b a".split()))
+    assert (c.cyk("".split()))
+
+
+def test_cyk_3():
+    c = CFG()
+    c.parse_grammar(gram2)
+    assert (c.cyk("a b c".split()))
+    assert (not c.cyk("a".split()))
+    assert (c.cyk("a a b b c c c".split()))
+    assert (c.cyk("a b b c c".split()))
+    assert (not c.cyk("".split()))
+    assert (c.cyk("a a b b c c".split()))
 
 
 def test_read_query():

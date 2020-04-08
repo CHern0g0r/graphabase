@@ -22,7 +22,7 @@ class Graph:
 
 
 def Hellings(grammar, graph):
-    g = grammar.to_chomsky_nf()
+    g = grammar.to_weak_chomsky_nf()
     m = []
 
     for rule in g.rules:
@@ -82,17 +82,13 @@ def print_res(res_file, r):
 
 
 if __name__ == "__main__":
-    # gram_file = str(input())
-    # graph_file = str(input())
-    # res_file = str(input())
-    gram_file = "/home/chernogor/Workspace/Python/graphabase/resources/gram.txt"
-    graph_file = "/home/chernogor/Workspace/Python/graphabase/resources/graph.txt"
-    res_file = "/home/chernogor/Workspace/Python/graphabase/src/res.txt"
+    gram_file = str(input())
+    graph_file = str(input())
+    res_file = str(input())
     c = CFG()
     c.read_from_file(gram_file)
     g = Graph()
     g.read_from_file(graph_file)
     r = Hellings(c, g)
-    print(r)
     c.print_cnf(res_file)
     print_res(res_file, r)

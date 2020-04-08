@@ -1,6 +1,5 @@
 from grammpy import Grammar, Nonterminal, Rule, EPS
 from grammpy.transforms import ContextFree
-from grammpy.exceptions import NotParsedException
 from grammpy.parsers import cyk
 
 
@@ -47,6 +46,10 @@ class CFG:
             return None
         return ContextFree.transform_to_chomsky_normal_form(self.grammar)
 
+    def to_weak_chomsky_nf(self):
+        ContextFree.prepare_for_cyk(self.grammar, inplace=True)
+        return self.grammar
+
     def rule_right_part(self, expr):
         if expr == "eps":
             return EPS
@@ -63,9 +66,11 @@ class CFG:
 
     def cyk(self, q):
         g = ContextFree.prepare_for_cyk(self.grammar)
+        if not q:
+            q = [EPS]
         try:
             cyk(g, q)
-        except NotParsedException:
+        except BaseException:
             return False
         return True
 
