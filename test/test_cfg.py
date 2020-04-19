@@ -14,23 +14,6 @@ lines = [['S', 'a', 'X', 'b', 'X'],
          ['Y', 'X'],
          ['Z', 'Z', 'X']]
 
-gram1 = [['S', 'S', 'a', 'S'],
-         ['S', 'S', 'b', 'S'],
-         ['S', 'eps']]
-
-gram2 = [['S', 'T'],
-         ['S', 'P'],
-         ['T', 'X', 'Y'],
-         ['X', 'a', 'X', 'b'],
-         ['X', 'a', 'b'],
-         ['Y', 'c', 'Y'],
-         ['Y', 'c'],
-         ['P', 'V', 'W'],
-         ['V', 'a', 'V'],
-         ['V', 'a'],
-         ['W', 'b', 'W', 'c'],
-         ['W', 'b', 'c']]
-
 cnf_lines = ["Z Z X",
              "X eps",
              "T0 X T0",
@@ -128,7 +111,8 @@ def test_output():
 
 def test_cyk_1():
     c = CFG()
-    c.parse_grammar(lines)
+    c.read_from_file(path.dirname(__file__) +
+                     "/res/gram1.txt")
     assert (c.cyk("a b".split()))
     assert (not c.cyk("a".split()))
     assert (c.cyk("a a c b".split()))
@@ -138,7 +122,8 @@ def test_cyk_1():
 
 def test_cyk_2():
     c = CFG()
-    c.parse_grammar(gram1)
+    c.read_from_file(path.dirname(__file__) +
+                     "/res/gram2.txt")
     assert (c.cyk("a b".split()))
     assert (not c.cyk("a b c".split()))
     assert (c.cyk("a a a b a b a".split()))
@@ -147,7 +132,8 @@ def test_cyk_2():
 
 def test_cyk_3():
     c = CFG()
-    c.parse_grammar(gram2)
+    c.read_from_file(path.dirname(__file__) +
+                     "/res/gram3.txt")
     assert (c.cyk("a b c".split()))
     assert (not c.cyk("a".split()))
     assert (c.cyk("a a b b c c c".split()))

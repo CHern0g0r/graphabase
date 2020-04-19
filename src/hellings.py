@@ -1,70 +1,70 @@
-from cfg import CFG
-from grammpy import EPS
+from weak_cfg import Weak_chom_cfg
 
 
 class Graph:
-    V = []
-    E = []
-    labels = {}
+    def __init__(self):
+        self.V = []
+        self.E = []
+        self.labels = {}
 
     def read_from_file(self, filename):
         with open(filename) as f:
             lines = list(map(lambda x: x.split(), f.readlines()))
         for u, mark, v in lines:
-            if u not in self.V:
-                self.V += [u]
-            if v not in self.V:
-                self.V += [v]
-            self.E += [(u, mark, v)]
+            k = int(u)
+            j = int(v)
+            if k not in self.V:
+                self.V += [k]
+            if j not in self.V:
+                self.V += [j]
+            self.E += [(k, mark, j)]
             if mark not in self.labels:
                 self.labels[mark] = []
-            self.labels[mark] += [(u, v)]
+            self.labels[mark] += [(k, j)]
 
 
-def Hellings(grammar, graph):
-    g = grammar.to_weak_chomsky_nf()
+def Hellings(g, graph: Graph):
+    g.to_wcnf()
     m = []
+    ret = []
 
     for rule in g.rules:
-        l, r = rule.rule
-        if r[0] == EPS:
+        l, r = rule
+        if r[0] == "eps":
             for v in graph.V:
-                m += [(v, "eps", v)]
+                m += [(v, l, v)]
+                ret += [(v, l, v)]
 
         if r[0] in graph.labels:
             for u, v in graph.labels[r[0]]:
-                m += [(u, l[0].__name__, v)]
+                m += [(u, l, v)]
+                ret += [(u, l, v)]
 
-    ret = m.copy()
     while m:
         v, Ni, u = m.pop(0)
-        for x, Nj, w in ret:
-            if v != w:
+        for w, Nj, pv in ret:
+            if v != pv:
                 continue
             for rule in g.rules:
-                l, r = rule.rule
-                Nk = l[0].__name__
+                Nk, r = rule
                 if len(r) == 1:
                     continue
-                r1, r2 = r[0].__name__, r[1].__name__
-                if r1 != Ni or r2 != Nj:
+                if r[0] != Nj or r[1] != Ni:
                     continue
-                add = (x, Nk, u)
+                add = (w, Nk, u)
                 if add in ret:
                     continue
                 m += [add]
                 ret += [add]
 
-        for x, Nj, w in ret:
-            if x != u:
+        for pu, Nj, w in ret:
+            if pu != u:
                 continue
             for rule in g.rules:
-                l, r = rule.rule
-                Nk = l[0].__name__
+                Nk, r = rule
                 if len(r) == 1:
                     continue
-                r1, r2 = r[0].__name__, r[1].__name__
-                if r1 != Nj or r2 != Ni:
+                if r[0] != Ni or r[1] != Nj:
                     continue
                 add = (v, Nk, w)
                 if add in ret:
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     gram_file = str(input())
     graph_file = str(input())
     res_file = str(input())
-    c = CFG()
+    c = Weak_chom_cfg()
     c.read_from_file(gram_file)
     g = Graph()
     g.read_from_file(graph_file)
