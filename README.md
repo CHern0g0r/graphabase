@@ -1,7 +1,7 @@
 # graphabase
 [![Build Status](https://travis-ci.org/CHern0g0r/graphabase.svg?branch=master)](https://travis-ci.org/CHern0g0r/graphabase)
 
-#Graph database with Formal languages
+# Graph database with Formal languages
 
 From graphabase folder.
 
@@ -16,7 +16,7 @@ To run tests use command:
   python3 -m pytest test
 ```
 
-#Context free queries
+# Context free queries
 
 Query grammar described in `resources/my_gram.md`
 
