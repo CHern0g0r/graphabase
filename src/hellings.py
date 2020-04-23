@@ -40,15 +40,14 @@ def Hellings(g, graph: Graph):
                 m += [(u, l, v)]
                 ret += [(u, l, v)]
 
+    new_rules = list(filter(lambda x: len(x[1]) != 1, g.rules))
     while m:
         v, Ni, u = m.pop(0)
         for w, Nj, pv in ret:
             if v != pv:
                 continue
-            for rule in g.rules:
+            for rule in new_rules:
                 Nk, r = rule
-                if len(r) == 1:
-                    continue
                 if r[0] != Nj or r[1] != Ni:
                     continue
                 add = (w, Nk, u)
@@ -60,10 +59,8 @@ def Hellings(g, graph: Graph):
         for pu, Nj, w in ret:
             if pu != u:
                 continue
-            for rule in g.rules:
+            for rule in new_rules:
                 Nk, r = rule
-                if len(r) == 1:
-                    continue
                 if r[0] != Ni or r[1] != Nj:
                     continue
                 add = (v, Nk, w)
