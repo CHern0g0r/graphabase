@@ -1,0 +1,12 @@
+S T
+S P
+T X Y
+X a X b
+X a b
+Y c Y
+Y c
+P V W
+V a V
+V a
+W b W c
+W b c

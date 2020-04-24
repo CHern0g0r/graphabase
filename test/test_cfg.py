@@ -100,10 +100,6 @@ def test_input():
 def test_output():
     c = CFG()
     testdir = tempfile.gettempdir()
-    # with open(path.join(testdir, 'input.txt'), 'w') as f:
-    #     for i in cnf_lines:
-    #         f.write(i + '\n')
-    # c.read_from_file(path.join(testdir, 'input.txt'))
     c.parse_grammar(lines)
     c.print_cnf(path.join(testdir, 'output.txt'))
 
@@ -111,3 +107,46 @@ def test_output():
         lines1 = map(lambda x: re.sub("\n", "", x), f.readlines())
 
     assert (set(lines1) == set(cnf_lines))
+
+
+def test_cyk_1():
+    c = CFG()
+    c.read_from_file(path.dirname(__file__) +
+                     "/res/gram1.txt")
+    assert (c.cyk("a b".split()))
+    assert (not c.cyk("a".split()))
+    assert (c.cyk("a a c b".split()))
+    assert (not c.cyk("c c".split()))
+    assert (not c.cyk("".split()))
+
+
+def test_cyk_2():
+    c = CFG()
+    c.read_from_file(path.dirname(__file__) +
+                     "/res/gram2.txt")
+    assert (c.cyk("a b".split()))
+    assert (not c.cyk("a b c".split()))
+    assert (c.cyk("a a a b a b a".split()))
+    assert (c.cyk("".split()))
+
+
+def test_cyk_3():
+    c = CFG()
+    c.read_from_file(path.dirname(__file__) +
+                     "/res/gram3.txt")
+    assert (c.cyk("a b c".split()))
+    assert (not c.cyk("a".split()))
+    assert (c.cyk("a a b b c c c".split()))
+    assert (c.cyk("a b b c c".split()))
+    assert (not c.cyk("".split()))
+    assert (c.cyk("a a b b c c".split()))
+
+
+def test_read_query():
+    c = CFG()
+    q = ['a', 'b', 'c', 'd']
+    testdir = tempfile.gettempdir()
+    with open(path.join(testdir, 'input.txt'), 'w') as f:
+        f.write(' '.join(q))
+    query = c.read_query_from_file(path.join(testdir, 'input.txt'))
+    assert (q == query)
