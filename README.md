@@ -25,7 +25,7 @@ Query grammar described in `resources/my_gram.md`
 ```
     S -> ST div S | eps
     ST -> connect to string | list | SELECT | NPAT
-    SELECT select OBJ from string where WHERE
+    SELECT -> select OBJ from string where WHERE
     NPAT -> nt eq PATTERN
     OBJ -> UNIT | count UNIT | exists UNIT
     UNIT -> l ident par ident r | ident
