@@ -39,5 +39,6 @@ ST - Выражение обращения к БД:
     select `obj` from `base` where `condition` - запрос к базе `base`
     `nt` eq `regex`                            - задать правило `nt` -> `regex`
 
+PATTERN - регулярное выражение над терминальным и нетерминальным алфавитами.
 
 Query examples presented in `resources/queries_examples.md`
