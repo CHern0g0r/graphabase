@@ -31,6 +31,11 @@ Query grammar described in `resources/my_gram.md`
     UNIT -> l ident par ident r | ident
     WHERE -> l VERT_EXPR r minus PATTERN minus gt l VERT_EXPR r
     VERT_EXPR -> ident | underline | ident dot id eq int
+    PATTERN -> ALT alt PATTERN | ALT
+    ALT -> SEQ | l r
+    SEQ -> SUB_SEQ SEQ | SUB_SEQ
+    SUB_SEQ -> SCOPED | SCOPED star | SCOPED plus | SCOPED quest
+    SCOPED -> ident | nt | l PATTERN r
 ```
 
 ST - Выражение обращения к БД:
