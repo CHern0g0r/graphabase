@@ -1,6 +1,6 @@
 import os
 import tempfile
-from src.my_parser import parse_from_file
+from src.my_parser import parse_from_file, print_tree
 
 
 def test_parse_from_file1():
@@ -49,7 +49,8 @@ def test_parse_from_file6():
     path = os.path.dirname(__file__) + '/res/query2.txt'
     testdir = tempfile.gettempdir()
     ans_path = os.path.join(testdir, 'res.txt')
-    parse_from_file(path, ans_path)
+    tree = parse_from_file(path)
+    print_tree(tree, ans_path)
     with open(ans_path) as f:
         lines = f.readlines()
     assert (len(lines) == 61)
