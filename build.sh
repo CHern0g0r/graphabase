@@ -1,5 +1,5 @@
 #!/bin/bash
-if pip3 install pytest && pip3 install rdflib && pip3 install pyformlang && pip3 install grammpy
+if pip3 install -r requirements.txt
 then
 echo -e "Complete"
 else

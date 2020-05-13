@@ -1,0 +1,3 @@
+connect to "BASE_NAME.txt" ;
+S = abcd S vds | eps ;
+select exists (u, v) from "BASE_NAME.txt" where (u) - S -> (v) ;
