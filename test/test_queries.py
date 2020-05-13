@@ -40,7 +40,7 @@ def test_connect():
 #     path = get_tempfile(s)
 #     tree = mp.parse_from_file(path)
 #     mp.run_script(tree)
-#     assert (capsys.readouterr().out == listed)
+#     assert (listener.query_res == listed)
 
 
 def test_named_pattern1():
@@ -70,40 +70,40 @@ def test_named_pattern2():
 def test_select_1(capsys):
     path = os.path.dirname(__file__) + '/res/query4.txt'
     tree = mp.parse_from_file(path)
-    mp.run_script(tree)
-    assert (capsys.readouterr().out == 'True\n')
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [True])
 
 
 def test_select_2(capsys):
     path = os.path.dirname(__file__) + '/res/query5.txt'
     tree = mp.parse_from_file(path)
-    mp.run_script(tree)
-    assert (capsys.readouterr().out == 'False\n')
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [False])
 
 
 def test_select_3(capsys):
     path = os.path.dirname(__file__) + '/res/query6.txt'
     tree = mp.parse_from_file(path)
-    mp.run_script(tree)
-    assert (capsys.readouterr().out == 'True\n')
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [True])
 
 
 def test_select_4(capsys):
     path = os.path.dirname(__file__) + '/res/query7.txt'
     tree = mp.parse_from_file(path)
-    mp.run_script(tree)
-    assert (capsys.readouterr().out == 'False\n')
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [False])
 
 
 def test_select_5(capsys):
     path = os.path.dirname(__file__) + '/res/query8.txt'
     tree = mp.parse_from_file(path)
-    mp.run_script(tree)
-    assert (capsys.readouterr().out == 'False\n')
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [False])
 
 
 def test_select_6(capsys):
     path = os.path.dirname(__file__) + '/res/query9.txt'
     tree = mp.parse_from_file(path)
-    mp.run_script(tree)
-    assert (capsys.readouterr().out == 'True\n')
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [True])

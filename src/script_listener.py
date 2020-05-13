@@ -24,6 +24,7 @@ class ScriptExecutor(GramListener):
         self.start_id = None
         self.end = None
         self.end_id = None
+        self.query_res = []
 
     def connect(self, ctx):
         self.path = ctx.children[2].symbol.text[1:-1]
@@ -37,7 +38,8 @@ class ScriptExecutor(GramListener):
 
     def exists(self):
         res = self.query()
-        return len(res) != 0
+        self.query_res += [len(res) != 0]
+        return self.query_res[-1]
 
     def count(self):
         pass
