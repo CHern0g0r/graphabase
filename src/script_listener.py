@@ -25,6 +25,7 @@ class ScriptExecutor(GramListener):
         self.end = None
         self.end_id = None
         self.query_res = []
+        self.start_nonterm = None
 
     def connect(self, ctx):
         self.path = ctx.children[2].symbol.text[1:-1]
@@ -52,10 +53,13 @@ class ScriptExecutor(GramListener):
 
     def query(self):
         c = deepcopy(self.gram)
-        c.new_rule('S', self.rule)
+        self.start_nonterm = self.gram.fresh_nonterm()
+        c.new_rule(self.start_nonterm, self.rule)
+        c.start = self.start_nonterm
         g = Graph()
         g.read_from_file(self.path + '/' + self.graph)
-        res = [(u, v) for u, N, v in Hellings(c, g) if N == 'S']
+        r = Hellings(c, g)
+        res = [(u, v) for u, N, v in r if N == self.start_nonterm]
         res = list(filter(lambda x: self.check_id(self.start_id, x[0]) and
                           self.check_id(self.end_id, x[1]), res))
         return res
@@ -79,6 +83,7 @@ class ScriptExecutor(GramListener):
         self.end_id = None
         self.select_type = None
         self.unit = None
+        self.start_nonterm = None
 
     def enterObj(self, ctx):
         if len(ctx.children) != 1:
