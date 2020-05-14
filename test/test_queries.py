@@ -107,3 +107,10 @@ def test_select_6(capsys):
     tree = mp.parse_from_file(path)
     listener = mp.run_script(tree)
     assert (listener.query_res == [True])
+
+
+def test_select_7(capsys):
+    path = os.path.dirname(__file__) + '/res/query10.txt'
+    tree = mp.parse_from_file(path)
+    listener = mp.run_script(tree)
+    assert (listener.query_res == [True])

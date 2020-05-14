@@ -1,0 +1,6 @@
+connect to "../test/res" ;
+N = a M b K;
+M = a M;
+M = a;
+K = b;
+select exists v from "graph1.txt" where ( v ) - a N -> ( _ );
