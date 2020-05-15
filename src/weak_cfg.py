@@ -65,7 +65,7 @@ class Weak_chom_cfg:
 
         for nont in self.nonterm:
             q = [nont]
-            mark = set(nont)
+            mark = {nont}
 
             while q:
                 cur = q.pop(0)
@@ -126,7 +126,7 @@ class Weak_chom_cfg:
 
     def del_unreachable(self):
         q = [self.start]
-        reachable = set(self.start)
+        reachable = {self.start}
 
         while q:
             cur = q.pop(0)

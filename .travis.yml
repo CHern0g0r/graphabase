@@ -7,7 +7,10 @@ install:
 
 before_script:
   - sudo apt-get install graphviz
-  - cd src
+  - sudo apt-get install antlr4
 
 script:
+  - cd src/antlr_parser
+  - antlr4 -Dlanguage=Python3 Gram.g4
+  - cd ..
   - python3 -m pytest ../test -v
