@@ -18,6 +18,25 @@ graph1.txt
 gram6.txt
 '''
 
+check_output = ['graph2.txt',
+                'query4.txt',
+                'gram2.txt',
+                'gram4.txt',
+                'gram3.txt',
+                'query5.txt',
+                'query10.txt',
+                'query7.txt',
+                'query1.txt',
+                'query8.txt',
+                'query3.txt',
+                'query9.txt',
+                'query6.txt',
+                'graph3.txt',
+                'query2.txt',
+                'gram1.txt',
+                'graph1.txt',
+                'gram6.txt']
+
 
 def get_tempfile(content):
     testdir = tempfile.gettempdir()
@@ -35,12 +54,14 @@ def test_connect():
     assert (listener.path == "res")
 
 
-# def test_list(capsys):
-#     s = 'connect to "{}";\nlist;'.format(os.path.dirname(__file__) + '/res')
-#     path = get_tempfile(s)
-#     tree = mp.parse_from_file(path)
-#     mp.run_script(tree)
-#     assert (listener.query_res == listed)
+def test_list(capsys):
+    s = 'connect to "{}";\nlist;'.format(os.path.dirname(__file__) + '/res')
+    path = get_tempfile(s)
+    tree = mp.parse_from_file(path)
+    mp.run_script(tree)
+    output = list(filter(lambda x: x.endswith('.txt'),
+                         capsys.readouterr().out.split()))
+    assert (output == check_output)
 
 
 def test_named_pattern1():
