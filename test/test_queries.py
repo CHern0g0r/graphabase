@@ -18,7 +18,7 @@ graph1.txt
 gram6.txt
 '''
 
-check_output = ['graph2.txt',
+check_output = {'graph2.txt',
                 'query4.txt',
                 'gram2.txt',
                 'gram4.txt',
@@ -35,7 +35,7 @@ check_output = ['graph2.txt',
                 'query2.txt',
                 'gram1.txt',
                 'graph1.txt',
-                'gram6.txt']
+                'gram6.txt'}
 
 
 def get_tempfile(content):
@@ -59,8 +59,8 @@ def test_list(capsys):
     path = get_tempfile(s)
     tree = mp.parse_from_file(path)
     mp.run_script(tree)
-    output = list(filter(lambda x: x.endswith('.txt'),
-                         capsys.readouterr().out.split()))
+    output = set(filter(lambda x: x.endswith('.txt'),
+                        capsys.readouterr().out.split()))
     assert (output == check_output)
 
 
