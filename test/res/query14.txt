@@ -1,0 +1,4 @@
+connect to "../test/res" ;
+S = a S c;
+S = a c;
+select count (u, v) from "graph4.txt" where ( u ) - (a b)* S+ -> ( v );
