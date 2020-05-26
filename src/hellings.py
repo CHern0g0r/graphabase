@@ -1,4 +1,5 @@
 from weak_cfg import Weak_chom_cfg
+from networkx import DiGraph
 
 
 class Graph:
@@ -21,6 +22,12 @@ class Graph:
             if mark not in self.labels:
                 self.labels[mark] = []
             self.labels[mark] += [(k, j)]
+
+    def to_digraph(self):
+        res = DiGraph()
+        for u, mark, v in self.E:
+            res.add_edge(u, v, label=[mark])
+        return res
 
 
 def Hellings(g, graph: Graph):

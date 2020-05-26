@@ -29,9 +29,21 @@ class Weak_chom_cfg:
         while "T" + str(self.cnt_nonterm) in self.nonterm:
             self.cnt_nonterm += 1
         self.nonterm.add("T" + str(self.cnt_nonterm))
-        if self.cnt_nonterm == 9:
-            print("here")
         return "T" + str(self.cnt_nonterm)
+
+    def get_eps_gen_nonterm(self):
+        eps_gen = {left for left, right in self.rules
+                   if len(right) == 1 and right[0] == 'eps'}
+        flag = True
+        while flag:
+            flag = False
+            for left, right in self.rules:
+                if left in eps_gen:
+                    continue
+                if all(map(lambda x: x in eps_gen, right)):
+                    eps_gen.add(left)
+                    flag = True
+        return eps_gen
 
     def del_long_rules(self):
         new_rules = set()
@@ -189,5 +201,6 @@ class Weak_chom_cfg:
 if __name__ == "__main__":
     c = Weak_chom_cfg()
     c.read_from_file(input("Path to grammar:\n"))
-    c.to_wcnf()
-    c.print_to_file(input("Path to result:\n"))
+    print(c.get_eps_gen_nonterm())
+    # c.to_wcnf()
+    # c.print_to_file(input("Path to result:\n"))
