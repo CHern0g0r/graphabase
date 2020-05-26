@@ -30,3 +30,9 @@
     select <something> from <graph_name> where () ;
     select exists (u, v) from "BASE_NAME" where (u) - S -> (v)
 ```
+
+Запрос к базе данных с указанием алгоритма выполнения:
+```
+    select <something> from <graph_name> where () with <algo_name>;
+    select exists (u, v) from "BASE_NAME" where (u) - S -> (v) with tensor
+```

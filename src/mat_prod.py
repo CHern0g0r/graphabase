@@ -1,7 +1,6 @@
 from weak_cfg import Weak_chom_cfg
 from hellings import Graph
 from scipy.sparse import csr_matrix
-# import numpy as np
 
 
 def matrix_from_graph(graph: Graph, gram: Weak_chom_cfg):
@@ -44,23 +43,21 @@ def eval_cfr(graph: Graph, gram: Weak_chom_cfg):
     return matrices
 
 
-def handle_ans(res, n):
+def handle_ans(res, n, v):
     ans = []
     for i in range(n):
         for j in range(n):
-            if res['S'][i, j]:
+            if res[v][i, j]:
                 ans += [(i, j)]
     return ans
 
 
 if __name__ == '__main__':
-    # gram_file = input()
-    gram_file = "/home/chernogor/Workspace/TFL/graphabase/test/res/gram4.txt"
-    # graph_file = input()
-    graph_file = "/home/chernogor/Workspace/TFL/graphabase/test/res/graph1.txt"
+    gram_file = input()
+    graph_file = input()
     c = Weak_chom_cfg()
     g = Graph()
     c.read_from_file(gram_file)
     g.read_from_file(graph_file)
     res = eval_cfr(g, c)
-    print(handle_ans(res, len(g.V)))
+    print(handle_ans(res, len(g.V), 'S'))

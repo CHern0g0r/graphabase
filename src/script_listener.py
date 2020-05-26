@@ -4,6 +4,8 @@ from antlr4.tree.Tree import TerminalNodeImpl
 from os import listdir
 from copy import deepcopy
 from hellings import Graph, Hellings
+from mat_prod import eval_cfr, handle_ans
+from tensor_prod import eval_tensor_cfr
 
 
 class ScriptExecutor(GramListener):
@@ -13,6 +15,10 @@ class ScriptExecutor(GramListener):
         self.path = None
         self.graph = None
         self.edges = None
+        self.algo = 'hellings'
+        self.algos = {'hellings': self.query,
+                      'matrix': self.mat_query,
+                      'tensor': self.tens_query}
         self.commands = {'connect': self.connect,
                          'list': self.listify}
         self.l_rule = None
@@ -48,7 +54,7 @@ class ScriptExecutor(GramListener):
         return self.edges
 
     def pure(self):
-        res = self.query()
+        res = self.algos[self.algo]()
         ans = None
         if len(self.unit) == 1:
             if self.unit[0] == self.start == self.end:
@@ -66,7 +72,7 @@ class ScriptExecutor(GramListener):
         return ans
 
     def exists(self):
-        res = self.query()
+        res = self.algos[self.algo]()
         self.query_res += [len(res) != 0]
         return self.query_res[-1]
 
@@ -92,6 +98,31 @@ class ScriptExecutor(GramListener):
                           self.check_id(self.end_id, x[1]), res))
         return res
 
+    def mat_query(self):
+        list(map(lambda x: self.cur_gram.new_rule(x[0], x[1]), self.rules))
+        g = Graph()
+        g.read_from_file(self.path + '/' + self.graph)
+
+        matrices = eval_cfr(g, self.cur_gram)
+        res = handle_ans(matrices, len(g.V), self.start_nonterm)
+        res = list(filter(lambda x: self.check_id(self.start_id, x[0]) and
+                          self.check_id(self.end_id, x[1]), res))
+        return res
+
+    def tens_query(self):
+        list(map(lambda x: self.cur_gram.new_rule(x[0], x[1]), self.rules))
+        g = Graph()
+        g.read_from_file(self.path + '/' + self.graph)
+
+        gram_lines = [(left, ' '.join(right))
+                      for left, right in self.cur_gram.rules]
+        r = eval_tensor_cfr(g, gram_lines, self.cur_gram)
+        res = [(edge[0], edge[1]) for edge in r.edges(data='label')
+               if self.start_nonterm in edge[2]]
+        res = list(filter(lambda x: self.check_id(self.start_id, x[0]) and
+                          self.check_id(self.end_id, x[1]), res))
+        return res
+
     def enterStatement(self, ctx):
         command = ctx.children[0]
         if type(command) is TerminalNodeImpl:
@@ -110,12 +141,15 @@ class ScriptExecutor(GramListener):
         self.cur_gram = deepcopy(self.gram)
         self.start_nonterm = self.cur_gram.fresh_nonterm()
         self.cur_gram.start = self.start_nonterm
+        if len(ctx.children) > 6:
+            self.algo = ctx.children[7].symbol.text
         self.stack.append(self.start_nonterm)
         self.rules = []
 
     def exitSelect(self, ctx):
         print(self.select_types[self.select_type]())
         self.cur_gram = None
+        self.algo = 'helligns'
         self.rule = None
         self.graph = None
         self.start = None

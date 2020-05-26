@@ -1,0 +1,12 @@
+connect to "../test/res" ;
+N = T;
+N = P;
+T = X Y;
+X = a X b;
+X = a b;
+Y = c+;
+P = V W;
+V = a a*;
+W = b W c;
+W = b c;
+select (u, v) from "graph2.txt" where ( u ) - N -> ( v.id = 8 ) with tensor;

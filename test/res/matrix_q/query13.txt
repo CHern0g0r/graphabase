@@ -1,0 +1,3 @@
+connect to "../test/res" ;
+S = a | b;
+select count (u, v) from "graph1.txt" where ( u ) - S* b -> ( v ) with matrix;
