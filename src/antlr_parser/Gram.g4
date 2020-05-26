@@ -7,10 +7,14 @@ script : statement DIV script
        ;
 
 statement : CONNECT TO STRING
-          | LIST
+          | listify
           | select
           | named_pattern
           ;
+
+listify : LIST
+        | LIST STRING
+        ;
 
 select : SELECT obj FROM STRING WHERE where_expr ;
 

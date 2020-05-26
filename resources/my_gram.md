@@ -1,9 +1,11 @@
 S eps
 S ST div S
 ST connect to string
-ST list
+ST LISTIFY
 ST SELECT
 ST NPAT
+LISTIFY list
+LISTIFY list string
 NPAT nt eq PATTERN
 SELECT select OBJ from string where WHERE
 OBJ UNIT
