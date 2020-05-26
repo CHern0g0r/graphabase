@@ -12,5 +12,7 @@ before_script:
 script:
   - cd src/antlr_parser
   - antlr4 -Dlanguage=Python3 Gram.g4
+  - cd ../antlr_regex
+  - antlr4 -Dlanguage=Python3 Rule.g4
   - cd ..
   - python3 -m pytest ../test -v
