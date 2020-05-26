@@ -1,0 +1,9 @@
+S P | T
+T X Y
+X a X b
+X a b
+Y c+
+P V W
+V a a*
+W b W c
+W b c

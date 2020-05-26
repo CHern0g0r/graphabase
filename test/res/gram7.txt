@@ -1,0 +1,3 @@
+S (a b)* N+
+N a N c
+N a c
