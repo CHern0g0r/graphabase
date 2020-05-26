@@ -1,13 +1,13 @@
 from hellings import Graph
 from networkx import transitive_closure, tensor_product, \
-    union, relabel_nodes, DiGraph
+    union, relabel_nodes, DiGraph, MultiDiGraph
 from pyformlang.regular_expression import Regex
 from weak_cfg import Weak_chom_cfg
 from my_gram_parser import parse_rule
 
 
 def rules_to_nx(gram_rules):
-    graph = DiGraph()
+    graph = MultiDiGraph()
     rename = {}
     nonterms = set()
     from_nont = {}
@@ -28,7 +28,6 @@ def rules_to_nx(gram_rules):
         subgraph = relabel_nodes(subgraph, rename)
         for edge in subgraph.edges:
             subgraph.edges[edge]['label'] = [subgraph.edges[edge]['label']]
-        subgraph = DiGraph(subgraph)
         graph = union(graph, subgraph)
         for node in subgraph.nodes:
             from_nont[node] = left
@@ -91,12 +90,9 @@ def handle_res(res, resfile):
 
 
 if __name__ == '__main__':
-    # gram_file = input()
-    # graph_file = input()
-    # res_file = input()
-    gram_file = '/home/chernogor/Workspace/TFL/graphabase/test/res/gram8.txt'
-    graph_file = '/home/chernogor/Workspace/TFL/graphabase/test/res/graph2.txt'
-    res_file = 'res.txt'
+    gram_file = input()
+    graph_file = input()
+    res_file = input()
     g = Graph()
     g.read_from_file(graph_file)
     c = Weak_chom_cfg()
