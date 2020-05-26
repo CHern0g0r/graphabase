@@ -14,6 +14,7 @@ statement : CONNECT TO STRING
 
 listify : LIST
         | LIST STRING
+        | LIST EDGES STRING
         ;
 
 select : SELECT obj FROM STRING WHERE where_expr ;
@@ -69,6 +70,8 @@ CONNECT : 'connect' ;
 TO : 'to' ;
 
 LIST : 'list' ;
+
+EDGES : 'edges' ;
 
 SELECT : 'select' ;
 
