@@ -143,7 +143,7 @@ def test_tens_prod_8():
 
     ans = run_test(gram_file, graph_file)
 
-    ref = {(0, 5)}
+    ref = {(1, 8), (0, 8)}
     assert (set(ans) == ref)
 
 
