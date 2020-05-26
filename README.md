@@ -25,7 +25,7 @@ Query grammar described in `resources/my_gram.md`
 ```
     S -> ST div S | eps
     ST -> connect to string | LISTIFY | SELECT | NPAT
-    LISTIFY -> list | list string
+    LISTIFY -> list | list string | list edges string
     SELECT -> select OBJ from string where WHERE
     NPAT -> nt eq PATTERN
     OBJ -> UNIT | count UNIT | exists UNIT
@@ -37,6 +37,7 @@ Query grammar described in `resources/my_gram.md`
 ST - Выражение обращения к БД:
     list                                       - список графов в текущей базе
     list `base`                                - список графов в базе `base`
+    list edges `base/g.txt`                    - список ребер в `base/g.txt`
     connect to `base`                          - подключиться к базе `base`
     select `obj` from `base` where `condition` - запрос к базе `base`
     `nt` eq `regex`                            - задать правило `nt` -> `regex`

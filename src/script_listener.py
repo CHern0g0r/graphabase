@@ -12,6 +12,7 @@ class ScriptExecutor(GramListener):
         self.cur_gram = None
         self.path = None
         self.graph = None
+        self.edges = None
         self.commands = {'connect': self.connect,
                          'list': self.listify}
         self.l_rule = None
@@ -39,6 +40,12 @@ class ScriptExecutor(GramListener):
             path = self.path
         print("\n".join(filter(lambda x: x.endswith('.txt'),
                                listdir(path))))
+
+    def list_edges(self, path):
+        graph = Graph()
+        graph.read_from_file(path)
+        self.edges = list(graph.labels.keys())
+        return self.edges
 
     def pure(self):
         res = self.query()
@@ -93,8 +100,10 @@ class ScriptExecutor(GramListener):
     def enterListify(self, ctx):
         if len(ctx.children) == 1:
             self.listify(ctx)
-        else:
+        elif len(ctx.children) == 2:
             self.listify(ctx, ctx.children[1].symbol.text[1:-1])
+        else:
+            print(self.list_edges(ctx.children[2].symbol.text[1:-1]))
 
     def enterSelect(self, ctx):
         self.graph = ctx.children[3].symbol.text[1:-1]
