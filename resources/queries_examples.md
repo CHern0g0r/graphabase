@@ -2,7 +2,17 @@
 
 Подключение к базе:
 ```
-    connect to "BASE_NAME.txt" ;
+    connect to "BASE_NAME" ;
+```
+
+Вывести список графов из текущей базы:
+```
+    list;
+```
+
+Вывести список графов с указанием базы:
+```
+    list "BASE_NAME"
 ```
 
 Добавление правила к грамматике:
@@ -13,5 +23,5 @@
 Запрос к базе данных:
 ```
     select <something> from <graph_name> where () ;
-    select exists (u, v) from "BASE_NAME.txt" where (u) - S -> (v)
+    select exists (u, v) from "BASE_NAME" where (u) - S -> (v)
 ```

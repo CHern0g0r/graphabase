@@ -34,9 +34,11 @@ class ScriptExecutor(GramListener):
     def connect(self, ctx):
         self.path = ctx.children[2].symbol.text[1:-1]
 
-    def listify(self, ctx):
+    def listify(self, ctx, path=None):
+        if path is None:
+            path = self.path
         print("\n".join(filter(lambda x: x.endswith('.txt'),
-                               listdir(self.path))))
+                               listdir(path))))
 
     def pure(self):
         res = self.query()
@@ -86,7 +88,13 @@ class ScriptExecutor(GramListener):
     def enterStatement(self, ctx):
         command = ctx.children[0]
         if type(command) is TerminalNodeImpl:
-            self.commands[command.symbol.text](ctx)
+            self.connect(ctx)
+
+    def enterListify(self, ctx):
+        if len(ctx.children) == 1:
+            self.listify(ctx)
+        else:
+            self.listify(ctx, ctx.children[1].symbol.text[1:-1])
 
     def enterSelect(self, ctx):
         self.graph = ctx.children[3].symbol.text[1:-1]
