@@ -5,3 +5,4 @@ pytest
 rdflib
 pyformlang
 grammpy
+scipy
