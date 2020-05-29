@@ -1,0 +1,4 @@
+connect to "../test/res" ;
+N = a+ b K;
+K = b;
+select v from "graph1.txt" where ( v ) - a N -> ( _ ) with tensor;

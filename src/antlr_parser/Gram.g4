@@ -17,7 +17,9 @@ listify : LIST
         | LIST EDGES STRING
         ;
 
-select : SELECT obj FROM STRING WHERE where_expr ;
+select : SELECT obj FROM STRING WHERE where_expr
+       | SELECT obj FROM STRING WHERE where_expr WITH ALGO
+       ;
 
 obj : unit
     | COUNT unit
@@ -78,6 +80,13 @@ SELECT : 'select' ;
 FROM : 'from' ;
 
 WHERE : 'where' ;
+
+WITH : 'with' ;
+
+ALGO : 'hellings'
+     | 'matrix'
+     | 'tensor'
+     ;
 
 COUNT : 'count' ;
 

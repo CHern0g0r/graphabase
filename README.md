@@ -27,6 +27,7 @@ Query grammar described in `resources/my_gram.md`
     ST -> connect to string | LISTIFY | SELECT | NPAT
     LISTIFY -> list | list string | list edges string
     SELECT -> select OBJ from string where WHERE
+              | select OBJ from string where WHERE with ALGO
     NPAT -> nt eq PATTERN
     OBJ -> UNIT | count UNIT | exists UNIT
     UNIT -> l ident par ident r | ident
@@ -40,7 +41,13 @@ ST - Выражение обращения к БД:
     list edges `base/g.txt`                    - список ребер в `base/g.txt`
     connect to `base`                          - подключиться к базе `base`
     select `obj` from `base` where `condition` - запрос к базе `base`
+    select `o` from `b` where `c` with `alg`   - запрос с помощью `alg`
     `nt` eq `regex`                            - задать правило `nt` -> `regex`
+
+Алгоритмы для использования в запросах:
+`hellings` - алгоритм Хеллингса для проверки КС-достижимости
+`matrix` - алгоритм проверки КС-достижимости на основе произведения матриц
+`tensor` - алгоритм проверки КС-достижимости на основе тензорного произведения 
 
 
 Query examples presented in `resources/queries_examples.md`

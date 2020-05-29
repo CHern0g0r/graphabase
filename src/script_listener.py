@@ -4,15 +4,25 @@ from antlr4.tree.Tree import TerminalNodeImpl
 from os import listdir
 from copy import deepcopy
 from hellings import Graph, Hellings
+from mat_prod import eval_cfr, handle_ans
+from tensor_prod import eval_tensor_cfr
+from time import time
 
 
 class ScriptExecutor(GramListener):
     def __init__(self):
         self.gram = Weak_chom_cfg()
         self.cur_gram = None
+        self.gram_lines = []
+        self.str_rule = None
         self.path = None
         self.graph = None
         self.edges = None
+        self.ind = []
+        self.algo = 'hellings'
+        self.algos = {'hellings': self.query,
+                      'matrix': self.mat_query,
+                      'tensor': self.tens_query}
         self.commands = {'connect': self.connect,
                          'list': self.listify}
         self.l_rule = None
@@ -48,7 +58,7 @@ class ScriptExecutor(GramListener):
         return self.edges
 
     def pure(self):
-        res = self.query()
+        res = self.algos[self.algo]()
         ans = None
         if len(self.unit) == 1:
             if self.unit[0] == self.start == self.end:
@@ -66,7 +76,7 @@ class ScriptExecutor(GramListener):
         return ans
 
     def exists(self):
-        res = self.query()
+        res = self.algos[self.algo]()
         self.query_res += [len(res) != 0]
         return self.query_res[-1]
 
@@ -92,6 +102,32 @@ class ScriptExecutor(GramListener):
                           self.check_id(self.end_id, x[1]), res))
         return res
 
+    def mat_query(self):
+        list(map(lambda x: self.cur_gram.new_rule(x[0], x[1]), self.rules))
+        g = Graph()
+        g.read_from_file(self.path + '/' + self.graph)
+
+        matrices = eval_cfr(g, self.cur_gram)
+        res = handle_ans(matrices, len(g.V), self.start_nonterm)
+        res = list(filter(lambda x: self.check_id(self.start_id, x[0]) and
+                          self.check_id(self.end_id, x[1]), res))
+        return res
+
+    def tens_query(self):
+        list(map(lambda x: self.cur_gram.new_rule(x[0], x[1]), self.rules))
+        g = Graph()
+        g.read_from_file(self.path + '/' + self.graph)
+
+        # gram_lines = [(left, ' '.join(right))
+        #               for left, right in self.cur_gram.rules]
+        gram_lines = self.gram_lines + [(self.l_rule, self.rule)]
+        r = eval_tensor_cfr(g, gram_lines, self.cur_gram)
+        res = [(edge[0], edge[1]) for edge in r.edges(data='label')
+               if self.start_nonterm in edge[2]]
+        res = list(filter(lambda x: self.check_id(self.start_id, x[0]) and
+                          self.check_id(self.end_id, x[1]), res))
+        return res
+
     def enterStatement(self, ctx):
         command = ctx.children[0]
         if type(command) is TerminalNodeImpl:
@@ -110,13 +146,18 @@ class ScriptExecutor(GramListener):
         self.cur_gram = deepcopy(self.gram)
         self.start_nonterm = self.cur_gram.fresh_nonterm()
         self.cur_gram.start = self.start_nonterm
+        self.l_rule = self.start_nonterm
+        self.rule = ""
+        if len(ctx.children) > 6:
+            self.algo = ctx.children[7].symbol.text
         self.stack.append(self.start_nonterm)
         self.rules = []
 
     def exitSelect(self, ctx):
         print(self.select_types[self.select_type]())
-        self.cur_gram = None
         self.rule = None
+        self.cur_gram = None
+        self.algo = 'helligns'
         self.graph = None
         self.start = None
         self.end = None
@@ -153,15 +194,15 @@ class ScriptExecutor(GramListener):
             self.end_id = vert_id
 
     def enterNamed_pattern(self, ctx):
-        # self.l_rule = ctx.children[0].symbol.text
-        # self.rule = []
+        self.l_rule = ctx.children[0].symbol.text
+        self.rule = ""
         self.stack.append(ctx.children[0].symbol.text)
 
     def exitNamed_pattern(self, ctx):
-        # self.gram.new_rule(self.l_rule, self.rule)
-        # self.l_rule = None
-        # self.rule = None
+        self.gram_lines += [(self.l_rule, self.rule)]
         list(map(lambda x: self.gram.new_rule(x[0], x[1]), self.rules))
+        self.l_rule = None
+        self.rule = None
         self.stack = []
         self.rules = []
 
@@ -169,11 +210,15 @@ class ScriptExecutor(GramListener):
         pass
 
     def enterAlt(self, ctx):
+        if type(ctx.children[0]) is TerminalNodeImpl:
+            self.rule += 'eps '
         fresh = self.gram.fresh_nonterm()
         self.rules.append((self.stack[-1], [fresh]))
         self.stack.append(fresh)
 
     def exitAlt(self, ctx):
+        if len(ctx.parentCtx.children) > 1:
+            self.rule += '| '
         self.stack.pop()
 
     def enterSeq(self, ctx):
@@ -198,9 +243,12 @@ class ScriptExecutor(GramListener):
                 self.rules.append((self.stack[-1], [fresh, self.stack[-1]]))
                 self.rules.append((self.stack[-1], ['eps']))
             elif ctx.children[1].symbol.text == '?':
+                self.ind += [len(self.rule)]
+                self.rule += '( '
                 self.rules.append((self.stack[-1], [fresh]))
                 self.rules.append((self.stack[-1], ['eps']))
             else:
+                self.ind += [len(self.rule)]
                 self.rules.append((self.stack[-1], [fresh, self.stack[-1]]))
                 self.rules.append((self.stack[-1], [fresh]))
         else:
@@ -208,17 +256,29 @@ class ScriptExecutor(GramListener):
         self.stack.append(fresh)
 
     def exitSubseq(self, ctx):
+        if len(ctx.children) > 1:
+            if ctx.children[1].symbol.text == '+':
+                self.rule += self.rule[self.ind[-1]:-1] + '* '
+                self.ind.pop()
+            elif ctx.children[1].symbol.text == '?':
+                self.rule += ' | $ )'
+                self.ind.pop()
+            else:
+                self.rule += ctx.children[1].symbol.text + ' '
         self.stack.pop()
         self.stack.pop()
 
     def enterScoped(self, ctx):
         if len(ctx.children) == 1:
+            self.rule += ctx.children[0].symbol.text + ' '
             self.rules.append((self.stack[-1], [ctx.children[0].symbol.text]))
         else:
+            self.rule += '( '
             fresh = self.gram.fresh_nonterm()
             self.rules.append((self.stack[-1], [fresh]))
             self.stack.append(fresh)
 
     def exitScoped(self, ctx):
         if len(ctx.children) > 1:
+            self.rule += ') '
             self.stack.pop()

@@ -1,0 +1,4 @@
+connect to "../test/res" ;
+S = a S c;
+S = a c;
+select v from "graph4.txt" where ( v ) - S c? (S | c) -> ( _ ) with matrix;

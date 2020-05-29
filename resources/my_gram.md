@@ -9,6 +9,7 @@ LISTIFY list string
 LISTIFY list edges string
 NPAT nt eq PATTERN
 SELECT select OBJ from string where WHERE
+SELECT select OBJ from string where WHERE with ALGO
 OBJ UNIT
 OBJ count UNIT
 OBJ exists UNIT
